@@ -12,14 +12,13 @@ LABEL description="Labor Digital PHP7.4 Dev Edition"
 COPY ssl/localmachine.space/localmachine.space.merged.crt /var/cert/merged.crt
 
 # Install some packages we need in dev
-RUN apt-get update && apt-get install -y \
-		mariadb-client \
-		git
+RUN apt-get update \
+  && apt-get install -y mariadb-client git
 
 # Install xdebug
 COPY /conf/99-xdebug.ini /usr/local/etc/php/conf.d/
 RUN yes | pecl install xdebug \
-    && docker-php-ext-enable xdebug
+  && docker-php-ext-enable xdebug
 
 # Add an extension to the bashrc to register the composer alias
 COPY conf/bashrc-dev.sh /root/
@@ -30,7 +29,7 @@ COPY /conf/99-environment.ini /usr/local/etc/php/conf.d/
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
-    && mv /usr/local/bin/composer.phar /usr/local/bin/composer2.phar
+  && mv /usr/local/bin/composer.phar /usr/local/bin/composer2.phar
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --1
 
