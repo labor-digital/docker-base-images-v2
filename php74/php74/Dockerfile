@@ -49,7 +49,7 @@ RUN apt-get update \
   && openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt \
   && cat server.crt server.key > merged.crt \
   && mv merged.crt /var/cert/ \
-  cd / \
+  && cd / \
   && rm -rf /opt/tmpssl
 
 # Install intl
