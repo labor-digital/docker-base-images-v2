@@ -128,4 +128,4 @@ RUN source /root/.bashrc \
 	&& ensure_dir /var/www/html \
 	&& ensure_dir /var/www/logs
 
-CMD ["doppler", "run", "--", "/opt/bootstrap.sh"]
+CMD ["doppler", "run", "--debug", "--", "/opt/bootstrap.sh"]
