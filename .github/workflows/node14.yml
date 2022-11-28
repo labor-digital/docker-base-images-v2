@@ -1,0 +1,31 @@
+name: Build and Push - NODE 14
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - node14/**
+
+jobs:
+  buildAndPush:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      # Base Image
+      - name: Build the Docker Base image
+        run: cd node14/node14 && docker build . --file Dockerfile --tag labordigital/docker-base-images:node14
+      - name: Push the image
+        run: docker push labordigital/docker-base-images:node14
+
+      # Dev Image
+      - name: Build the Docker Dev image
+        run: cd node14/node14-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images:node14-dev
+      - name: Push the image
+        run: docker push labordigital/docker-base-images:node14-dev
