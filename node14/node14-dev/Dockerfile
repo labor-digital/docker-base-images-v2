@@ -1,7 +1,7 @@
 # TAG: labordigital/docker-base-images:node14-dev
 # Build: docker build -t labordigital/docker-base-images:node14-dev .
 # Push: docker push labordigital/docker-base-images:node14-dev
-FROM labordigital/docker-base-images:node14
+FROM labordigital/docker-base-images-v2:node14
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
