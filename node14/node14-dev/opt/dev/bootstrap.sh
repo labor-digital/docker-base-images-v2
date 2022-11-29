@@ -16,7 +16,6 @@ if [ -f "/opt/project/build.sh" ]; then
     source /opt/project/build.sh
     [[ $? -ne 0 ]] && exit 1
     touch /opt/project/build.ran
-    service apache2 reload
   fi
 fi
 
