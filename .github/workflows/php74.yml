@@ -21,10 +21,10 @@ jobs:
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       # Base Image
-      - name: Build the Docker Base image
-        run: cd php74/php74 && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php74
-      - name: Push the image
-        run: docker push labordigital/docker-base-images-v2:php74
+#      - name: Build the Docker Base image
+#        run: cd php74/php74 && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php74
+#      - name: Push the image
+#        run: docker push labordigital/docker-base-images-v2:php74
 
       # Dev Image
       - name: Checkout ssl certs
