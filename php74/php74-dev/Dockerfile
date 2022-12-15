@@ -30,8 +30,11 @@ COPY /conf/99-environment.ini /usr/local/etc/php/conf.d/
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin \
   && mv /usr/local/bin/composer.phar /usr/local/bin/composer2.phar
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --1
+
+# fix for apple silicon
+RUN echo "" >> /etc/apache2/apache2.conf
+RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
 
 # Add our additional scripts
 COPY opt /opt
