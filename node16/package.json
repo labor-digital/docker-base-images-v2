@@ -1,0 +1,25 @@
+{
+  "name": "@labor-digital/docker-base-image",
+  "version": "1.0.0",
+  "description": "A bundle of scripts and dependencies for a docker base image",
+  "config": {
+    "base_tag": "node16",
+    "source_tag": "16-bullseye"
+  },
+  "scripts": {
+    "run": "node ../.build/runner \"cd \\\"{{npm_config_tag}}\\\" && docker docker push labordigital/docker-base-images:{{npm_config_tag}}\"",
+    "image:push": "node ../.build/runner \"cd \\\"{{npm_config_tag}}\\\" && docker push labordigital/docker-base-images:{{npm_config_tag}}\"",
+    "image:build": "node ../.build/runner \"cd \\\"{{npm_config_tag}}\\\" && docker build -t \\\"labordigital/docker-base-images:{{npm_config_tag}}\\\" --build-arg BASE_TAG=\\\"{{npm_package_config_base_tag}}\\\" --build-arg SOURCE_TAG=\\\"{{npm_package_config_source_tag}}\\\" .\"",
+    "base:build": "node ../.build/runner \"npm run image:build --tag=\\\"{{npm_package_config_base_tag}}\\\"\"",
+    "base:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}\\\"\"",
+    "dev:copySsl": "node ../.build/runner \"ncp node_modules/@labor-digital/ssl-certs \\\"{{npm_package_config_base_tag}}-dev/ssl\\\"\"",
+    "dev:build": "node ../.build/runner \"npm run dev:copySsl && npm run image:build --tag=\\\"{{npm_package_config_base_tag}}-dev\\\"\"",
+    "dev:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}-dev\\\"\""
+  },
+  "author": "LABOR.digital",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@labor-digital/ssl-certs": "^1.1.2",
+    "ncp": "^2.0.0"
+  }
+}
