@@ -1,7 +1,7 @@
 # TAG: labordigital/docker-base-images:php73-dev
 # Build: docker build -t labordigital/docker-base-images:php73-dev .
 # Push: docker push labordigital/docker-base-images:php73-dev
-FROM labordigital/docker-base-images:php73
+FROM labordigital/docker-base-images-v2:php73
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
@@ -19,6 +19,10 @@ RUN apt-get update && apt-get install -y \
 # Add an extension to the bashrc to register the composer alias
 COPY conf/bashrc-dev.sh /root/
 RUN chmod +x /root/bashrc-dev.sh
+
+# fix for apple silicon
+RUN echo "" >> /etc/apache2/apache2.conf
+RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
 
 # Add development configuration
 COPY /conf/99-environment.ini /usr/local/etc/php/conf.d/

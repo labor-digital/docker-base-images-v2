@@ -2,7 +2,7 @@
 # Build: docker build -t labordigital/docker-base-images:php73-ext .
 # Push: docker push labordigital/docker-base-images:php73-ext
 
-FROM labordigital/docker-base-images:php73
+FROM labordigital/docker-base-images-v2:php73
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
