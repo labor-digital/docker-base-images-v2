@@ -145,4 +145,4 @@ RUN chmod +x /opt/readEnv.sh
 RUN mkdir /var/www/html_data \
 	&& mkdir /var/www/logs
 
-ENTRYPOINT ["/opt/bootstrap.sh"]
+CMD ["doppler", "run", "--", "/opt/bootstrap.sh"]

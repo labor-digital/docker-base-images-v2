@@ -1,7 +1,7 @@
 # TAG: labordigital/docker-base-images:php72-legacy-dev
 # Build: docker build -t labordigital/docker-base-images:php72-legacy-dev .
 # Push: docker push labordigital/docker-base-images:php72-legacy-dev
-FROM labordigital/docker-base-images:php72-legacy
+FROM labordigital/docker-base-images-v2:php72-legacy
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
