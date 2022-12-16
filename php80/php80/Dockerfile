@@ -139,4 +139,4 @@ RUN source /root/.bashrc \
 	&& ensure_dir /var/www/html \
 	&& ensure_dir /var/www/logs
 
-ENTRYPOINT ["/opt/bootstrap.sh"]
+CMD ["doppler", "run", "--", "/opt/bootstrap.sh"]
