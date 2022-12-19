@@ -1,6 +1,6 @@
 ARG BASE_TAG
 
-FROM labordigital/docker-base-images:${BASE_TAG}
+FROM labordigital/docker-base-images-v2:${BASE_TAG}
 
 MAINTAINER LABOR digital <info@labor.digital>
 LABEL description="Labor Digital ${BASE_TAG} Dev Edition"

@@ -1,5 +1,5 @@
 {
-	"name": "@labor-digital/node-base-image",
+	"name": "@labor-digital/node-base-image-v2",
 	"version": "1.0.0",
 	"description": "Generic entry point to keep the container running",
 	"main": "server.js",
