@@ -29,6 +29,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --1
 
+# fix for apple silicon
+RUN echo "" >> /etc/apache2/apache2.conf
+RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
+
 # Add our additional scripts
 COPY opt /opt
 RUN find /opt/dev -type f -iname "*.sh" -exec chmod +x {} \;
