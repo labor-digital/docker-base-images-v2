@@ -14,11 +14,7 @@
     "base:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}\\\"\"",
     "dev:copySsl": "node ../.build/runner \"ncp node_modules/@labor-digital/ssl-certs \\\"{{npm_package_config_base_tag}}-dev/ssl\\\"\"",
     "dev:build": "node ../.build/runner \"npm run dev:copySsl && npm run image:build --tag=\\\"{{npm_package_config_base_tag}}-dev\\\"\"",
-    "dev:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}-dev\\\"\"",
-    "ext:build": "node ../.build/runner \"npm run image:build --tag=\\\"{{npm_package_config_base_tag}}-ext\\\"\"",
-    "ext:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}-ext\\\"\"",
-    "extDev:build": "node ../.build/runner \"npm run image:build --tag=\\\"{{npm_package_config_base_tag}}-ext-dev\\\"\"",
-    "extDev:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}-ext-dev\\\"\""
+    "dev:push": "node ../.build/runner \"npm run image:push --tag=\\\"{{npm_package_config_base_tag}}-dev\\\"\""
   },
   "author": "LABOR.digital",
   "license": "Apache-2.0",
