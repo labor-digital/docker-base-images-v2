@@ -1,6 +1,6 @@
-# TAG: labordigital/docker-base-images:node12
-# Build: docker build -t labordigital/docker-base-images:node12 .
-# Push: docker push labordigital/docker-base-images:node12
+# TAG: labordigital/docker-base-images-v2:node12
+# Build: docker build -t labordigital/docker-base-images-v2:node12 .
+# Push: docker push labordigital/docker-base-images-v2:node12
 
 FROM node:12-buster
 
