@@ -31,11 +31,3 @@ jobs:
       # Dev Image
       - name: Build and push the dev image
         run: cd php80/php80 && npm run dev:build && npm run dev:push
-
-      # Extended Image
-      - name: Build and push the extended image
-        run: cd php80/php80 && npm run ext:build && npm run ext:push
-
-      # Extended Dev Image
-      - name: Build and push the extended dev image
-        run: cd php80/php80 && npm run extDev:build && npm run extDev:push

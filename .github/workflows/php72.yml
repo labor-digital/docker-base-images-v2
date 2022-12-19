@@ -20,9 +20,9 @@ jobs:
 
       # Base Image
       - name: Build the Docker Base image
-        run: cd php72/php72 && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72
+        run: cd php72/php72 && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php72
       - name: Push the image
-        run: docker push labordigital/docker-base-images:php72
+        run: docker push labordigital/docker-base-images-v2:php72
 
       # Dev Image
       - name: Checkout ssl certs
@@ -31,35 +31,6 @@ jobs:
           repository: labor-digital/ssl-certs
           path: php72/php72-dev/ssl
       - name: Build the Docker Dev image
-        run: cd php72/php72-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72-dev
+        run: cd php72/php72-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php72-dev
       - name: Push the image
-        run: docker push labordigital/docker-base-images:php72-dev
-
-      # Extended Image
-      - name: Build the extended Docker image
-        run: cd php72/php72-ext && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72-ext
-      - name: Push the image
-        run: docker push labordigital/docker-base-images:php72-ext
-
-      # Extended Dev Image
-      - name: Build the extended Docker Dev image
-        run: cd php72/php72-ext-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72-ext-dev
-      - name: Push the image
-        run: docker push labordigital/docker-base-images:php72-ext-dev
-
-      # Legacy Image
-      - name: Build the legacy Docker image
-        run: cd php72/php72-legacy && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72-legacy
-      - name: Push the image
-        run: docker push labordigital/docker-base-images:php72-legacy
-
-      # Legacy Dev Image
-      - name: Checkout ssl certs
-        uses: actions/checkout@v2
-        with:
-          repository: labor-digital/ssl-certs
-          path: php72/php72-legacy-dev/ssl
-      - name: Build the legacy Docker Dev image
-        run: cd php72/php72-legacy-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images:php72-legacy-dev
-      - name: Push the image
-        run: docker push labordigital/docker-base-images:php72-legacy-dev
+        run: docker push labordigital/docker-base-images-v2:php72-dev
