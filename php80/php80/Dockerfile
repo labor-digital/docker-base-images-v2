@@ -98,14 +98,11 @@ RUN pecl install \
 		apcu
 
 # Install mbstring
-RUN apt-get install -y \
-        libonig-dev \
-    && docker-php-ext-install \
-	mbstring
+RUN apt-get install -y libonig-dev \
+    && docker-php-ext-install mbstring
 
 # Install opcache
-RUN docker-php-ext-install \
-	opcache
+RUN docker-php-ext-install opcache
 	
 # Install fileinfo
 RUN docker-php-ext-install -j$(nproc) fileinfo
@@ -116,7 +113,7 @@ RUN apt-get install -y apt-transport-https ca-certificates gnupg \
   && curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - \
   && echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list \
   && apt-get update \
-  && apt-get install doppler -y \
+  && apt-get install doppler -y
 
 # Prepare apache modules
 RUN a2enmod rewrite \
