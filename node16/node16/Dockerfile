@@ -46,6 +46,14 @@ RUN apt-get install -y \
         libzip-dev \
         zip
 
+# Install doppler
+RUN export HISTIGNORE='doppler*'
+RUN apt-get install -y apt-transport-https ca-certificates gnupg \
+  && curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | apt-key add - \
+  && echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list \
+  && apt-get update \
+  && apt-get install doppler -y
+
 # Setup a root bashrc for the composer-alias
 COPY conf/.bashrc /root/
 
@@ -66,4 +74,4 @@ RUN source /root/.bashrc \
 COPY src/* /var/www/html/
 WORKDIR /var/www/html
 
-ENTRYPOINT ["/opt/bootstrap.sh"]
+CMD ["doppler", "run", "--", "/opt/bootstrap.sh"]
