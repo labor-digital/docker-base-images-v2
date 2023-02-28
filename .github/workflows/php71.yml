@@ -1,0 +1,36 @@
+name: Build and Push - PHP 71
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - php71/**
+
+jobs:
+  buildAndPush:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      # Base Image
+      - name: Build the Docker Base image
+        run: cd php71/php71 && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php71
+      - name: Push the image
+        run: docker push labordigital/docker-base-images-v2:php71
+
+      # Dev Image
+      - name: Checkout ssl certs
+        uses: actions/checkout@v2
+        with:
+          repository: labor-digital/ssl-certs
+          path: php71/php71-dev/ssl
+      - name: Build the Docker Dev image
+        run: cd php71/php71-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php71-dev
+      - name: Push the image
+        run: docker push labordigital/docker-base-images-v2:php71-dev
