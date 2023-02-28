@@ -1,13 +1,13 @@
-# TAG: labordigital/docker-base-images:php72-dev
-# Build: docker build -t labordigital/docker-base-images:php72-dev .
-# Push: docker push labordigital/docker-base-images:php72-dev
-FROM labordigital/docker-base-images-v2:php72
+# TAG: labordigital/docker-base-images:php71-dev
+# Build: docker build -t labordigital/docker-base-images:php71-dev .
+# Push: docker push labordigital/docker-base-images:php71-dev
+FROM labordigital/docker-base-images-v2:php71
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
 
 # Set Label
-LABEL description="Labor Digital PHP7.2 Dev Edition"
+LABEL description="Labor Digital PHP7.1 Dev Edition"
 
 COPY ssl/localmachine.space/localmachine.space.merged.crt /var/cert/merged.crt
 

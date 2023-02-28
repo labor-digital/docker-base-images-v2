@@ -2,4 +2,4 @@ version: "3.0"
 services:
   app:
     build: .
-    image: labordigital/docker-base-images-v2:php72-dev
+    image: labordigital/docker-base-images-v2:php71-dev

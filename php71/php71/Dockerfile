@@ -1,6 +1,6 @@
-# TAG: labordigital/docker-base-images:php72
-# Build: docker build -t labordigital/docker-base-images:php72 .
-# Push: docker push labordigital/docker-base-images:php72
+# TAG: labordigital/docker-base-images:php71
+# Build: docker build -t labordigital/docker-base-images:php71 .
+# Push: docker push labordigital/docker-base-images:php71
 
 # Parent package is described here: https://hub.docker.com/_/php/
 FROM php:7.1-apache
