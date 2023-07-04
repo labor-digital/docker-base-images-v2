@@ -1,0 +1,33 @@
+name: Build and Push - node18
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - node18/**
+
+jobs:
+  buildAndPush:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Install dependencies
+        run: cd node18/node18 && npm install
+
+      # Base Image
+      - name: Build and push the base image
+        run: cd node18/node18 && npm run base:build && npm run base:push
+
+      # Dev Image
+      - name: Build and push the dev image
+        run: cd node18/node18 && npm run dev:build && npm run dev:push
