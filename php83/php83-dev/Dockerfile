@@ -12,11 +12,6 @@ RUN apt-get update && apt-get install -y \
 		mariadb-client \
 		git
 
-# Install xdebug
-COPY /conf/99-xdebug.ini /usr/local/etc/php/conf.d/
-RUN yes | pecl install xdebug \
-    && docker-php-ext-enable xdebug
-
 # fix for apple silicon
 RUN echo "" >> /etc/apache2/apache2.conf
 RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
