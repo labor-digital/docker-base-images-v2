@@ -9,9 +9,6 @@ if [ -f "/opt/project/install.done" ]; then
 else
   echo "Installing dev-only dependencies"
 
-  # Install dev-symlinker
-  composer global require labor-digital/composer-dev-symlink
-
   # Set the marker
   touch "/opt/project/install.done"
 fi
