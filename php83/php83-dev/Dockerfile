@@ -5,7 +5,7 @@ FROM labordigital/docker-base-images-v2:${BASE_TAG}
 MAINTAINER LABOR digital <info@labor.digital>
 LABEL description="Labor Digital ${BASE_TAG} Dev Edition"
 
-COPY ssl/localmachine.space/localmachine.space.merged.crt /var/cert/merged.crt
+COPY ssl/labor.systems/labor.systems.merged.crt /var/cert/merged.crt
 
 # Install some packages we need in dev
 RUN apt-get update && apt-get install -y \
