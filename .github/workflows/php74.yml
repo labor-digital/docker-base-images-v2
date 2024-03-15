@@ -36,3 +36,25 @@ jobs:
         run: cd php74/php74-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php74-dev
       - name: Push the image
         run: docker push labordigital/docker-base-images-v2:php74-dev
+
+      # Ext Image
+      - name: Checkout ssl certs
+        uses: actions/checkout@v2
+        with:
+          repository: labor-digital/ssl-certs
+          path: php74/php74-ext/ssl
+      - name: Build the Docker Extended image
+        run: cd php74/php74-ext && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php74-ext
+      - name: Push the image
+        run: docker push labordigital/docker-base-images-v2:php74-ext
+
+      # Ext Dev Image
+      - name: Checkout ssl certs
+        uses: actions/checkout@v2
+        with:
+          repository: labor-digital/ssl-certs
+          path: php74/php74-ext/ssl
+      - name: Build the Docker Extended image
+        run: cd php74/php74-ext-dev && docker build . --file Dockerfile --tag labordigital/docker-base-images-v2:php74-ext-dev
+      - name: Push the image
+        run: docker push labordigital/docker-base-images-v2:php74-ext-dev
