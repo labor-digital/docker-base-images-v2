@@ -97,6 +97,12 @@ jobs:
           tags: |
             type=raw,value=${{ env.BASE_TAG_TEMP }}${{ env.EXT }}
 
+      - name: Checkout ssl certs
+        uses: actions/checkout@v2
+        with:
+          repository: labor-digital/ssl-certs
+          path: ./${{ env.BASE_TAG_TEMP }}/${{ env.BASE_TAG }}${{ env.EXT }}/ssl
+
       - name: Build and push base image
         uses: docker/build-push-action@v5
         with:
