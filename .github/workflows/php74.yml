@@ -15,7 +15,6 @@ env:
   IMAGE_NAME: labordigital/docker-base-images-v2
   SOURCE_TAG: 7.4-apache
   BASE_TAG: php74
-  BASE_TAG_TEMP: php74-v2
   EXT: -dev
 
 jobs:
@@ -42,7 +41,7 @@ jobs:
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/.
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG_TEMP }}
+          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}
           platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/Dockerfile
           cache-from: type=gha
@@ -59,41 +58,31 @@ jobs:
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/.
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG_TEMP }}-dev
+          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-dev
           platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       # Ext Image
-      - name: Checkout ssl certs
-        uses: actions/checkout@v2
-        with:
-          repository: labor-digital/ssl-certs
-          path: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/ssl
       - name: Build and push extended image
         uses: docker/build-push-action@v5
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/.
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG_TEMP }}-ext
+          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext
           platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       # Ext Dev Image
-      - name: Checkout ssl certs
-        uses: actions/checkout@v2
-        with:
-          repository: labor-digital/ssl-certs
-          path: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/ssl
       - name: Build and push extended dev image
         uses: docker/build-push-action@v5
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/.
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG_TEMP }}-ext-dev
+          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext-dev
           platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/Dockerfile
           cache-from: type=gha
