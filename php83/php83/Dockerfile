@@ -1,8 +1,11 @@
 ARG BASE_TAG
 ARG SOURCE_TAG
 
+# When using a PHP image, make sure to use the amd64 version, or it will take forever
+# GH Actions is running arm64 in a emulator (QEMU). This way, it will use the native amd64 and be much faster.
+
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM php:${SOURCE_TAG}
+FROM --platform=linux/amd64 php:${SOURCE_TAG}
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
