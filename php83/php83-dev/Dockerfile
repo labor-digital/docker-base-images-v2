@@ -1,9 +1,13 @@
-ARG BASE_TAG
+# TAG: labordigital/docker-base-images-v2:php83-dev
+# Build: docker build -t labordigital/docker-base-images-v2:php83-dev .
+# Push: docker push labordigital/docker-base-images-v2:php83-dev
+FROM labordigital/docker-base-images-v2:php83
 
-FROM labordigital/docker-base-images-v2:${BASE_TAG}
-
+# Define author
 MAINTAINER LABOR digital <info@labor.digital>
-LABEL description="Labor Digital ${BASE_TAG} Dev Edition"
+
+# Set Label
+LABEL description="Labor Digital PHP8.3 Dev Edition"
 
 COPY ssl/labor.systems/labor.systems.merged.crt /var/cert/merged.crt
 
@@ -20,7 +24,10 @@ RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
 COPY conf/bashrc-dev.sh /root/
 RUN chmod +x /root/bashrc-dev.sh
 
+# Add development configuration
 COPY /conf/99-environment.ini /usr/local/etc/php/conf.d/
+
+# Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 RUN source /root/.bashrc \
 	&& ensure_dir /var/www/.composer

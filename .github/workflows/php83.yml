@@ -63,27 +63,3 @@ jobs:
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      # Ext Image
-      - name: Build and push extended image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/.
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext
-          platforms: linux/amd64,linux/arm64
-          file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Ext Dev Image
-      - name: Build and push extended dev image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/.
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext-dev
-          platforms: linux/amd64,linux/arm64
-          file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
