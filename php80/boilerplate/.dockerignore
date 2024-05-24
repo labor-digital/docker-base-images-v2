@@ -8,6 +8,7 @@
 .env.app
 .unison*
 perms*.set
+.phpstorm*
 
 # TODO: Enable this if you want to use the multi-step build
 # src/vendor
