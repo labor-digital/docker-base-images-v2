@@ -30,8 +30,7 @@ services:
   mysql:
     restart: "no"
     container_name: '${COMPOSE_PROJECT_NAME}-mysql'
-    image: 'mysql:8.0'
-    command: --default-authentication-plugin=mysql_native_password
+    image: 'mariadb:10.11'
     env_file:
       - .env
     ports:
