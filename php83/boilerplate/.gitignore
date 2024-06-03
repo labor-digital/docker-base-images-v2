@@ -28,7 +28,3 @@ perms*.set
 !.idea/php-inspections-ea-ultimate.xml
 !.idea/saveactions_settings.xml
 !.idea/dataSources*.xml
-
-# Vendor dev directory
-src/vendor-dev/*
-!src/vendor-dev/.keep
