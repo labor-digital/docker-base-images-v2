@@ -30,7 +30,7 @@ services:
   mysql:
     restart: "no"
     container_name: '${COMPOSE_PROJECT_NAME}-mysql'
-    image: 'mysql:5.6'
+    image: 'mariadb:10.11'
     env_file:
       - .env
     ports:
