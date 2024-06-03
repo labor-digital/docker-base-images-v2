@@ -8,6 +8,10 @@
 .env.app
 .unison*
 perms*.set
+.phpstorm*
+
+# TODO: Enable this if you want to use the multi-step build
+# src/vendor
 
 # TODO:
 # Be sure to place all directories here, which are downloaded through composer, contain temporary data, uploaded user data, or any other stuff which does not belong to the source code itself.
