@@ -2,13 +2,13 @@ name: Build and Push - PHP 83
 
 on:
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 8 * * *'
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - php83/**
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - php83/**
 
 env:
   REGISTRY: docker.io

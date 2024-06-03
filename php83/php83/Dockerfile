@@ -1,17 +1,15 @@
-ARG BASE_TAG
-ARG SOURCE_TAG
-
-# When using a PHP image, make sure to use the amd64 version, or it will take forever
-# GH Actions is running arm64 in a emulator (QEMU). This way, it will use the native amd64 and be much faster.
+# TAG: labordigital/docker-base-images-v2:php83
+# Build: docker build -t labordigital/docker-base-images-v2:php83 .
+# Push: docker push labordigital/docker-base-images-v2:php83
 
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM --platform=linux/amd64 php:${SOURCE_TAG}
+FROM php:8.3-apache
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital ${BASE_TAG}"
+LABEL description="LABOR Digital PHP8.3"
 
 # Expose ports
 EXPOSE 80
