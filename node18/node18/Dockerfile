@@ -1,13 +1,10 @@
-ARG BASE_TAG
-ARG SOURCE_TAG
-
-FROM node:${SOURCE_TAG}
+FROM node:18-bullseye
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital ${BASE_TAG}"
+LABEL description="LABOR Digital Node18"
 
 # Expose ports
 EXPOSE 8000

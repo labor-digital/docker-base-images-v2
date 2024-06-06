@@ -1,5 +1,0 @@
-version: "3.0"
-services:
-  app:
-    build: .
-    image: labordigital/docker-base-images:node14

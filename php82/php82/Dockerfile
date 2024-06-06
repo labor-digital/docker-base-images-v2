@@ -1,14 +1,11 @@
-ARG BASE_TAG
-ARG SOURCE_TAG
-
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM php:${SOURCE_TAG}
+FROM php:8.2-apache
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital ${BASE_TAG}"
+LABEL description="LABOR Digital PHP8.2"
 
 # Expose ports
 EXPOSE 80

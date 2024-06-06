@@ -1,9 +1,7 @@
-ARG BASE_TAG
-
-FROM labordigital/docker-base-images-v2:${BASE_TAG}
+FROM labordigital/docker-base-images-v2:node18
 
 MAINTAINER LABOR digital <info@labor.digital>
-LABEL description="Labor Digital ${BASE_TAG} Dev Edition"
+LABEL description="Labor Digital Node18 Dev Edition"
 
 COPY ssl/labor.systems/labor.systems.merged.crt /var/cert/merged.crt
 

@@ -7,7 +7,7 @@ FROM labordigital/docker-base-images-v2:node14
 MAINTAINER LABOR digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital Node 14 Dev Edition"
+LABEL description="LABOR Digital Node14 Dev Edition"
 
 ENV NODE_ENV development
 

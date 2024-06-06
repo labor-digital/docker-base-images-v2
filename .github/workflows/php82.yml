@@ -2,20 +2,18 @@ name: Build and Push - PHP 82
 
 on:
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 8 * * *'
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - php82/**
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - php82/**
 
 env:
   REGISTRY: docker.io
   IMAGE_NAME: labordigital/docker-base-images-v2
-  SOURCE_TAG: 8.2-apache
   BASE_TAG: php82
-  EXT: -dev
 
 jobs:
   buildAndPush:

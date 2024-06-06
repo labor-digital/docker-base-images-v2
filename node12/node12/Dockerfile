@@ -8,7 +8,7 @@ FROM node:12-buster
 MAINTAINER LABOR.digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital Node 12"
+LABEL description="LABOR Digital Node12"
 
 # Expose ports
 EXPOSE 8000

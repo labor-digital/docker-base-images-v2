@@ -13,9 +13,7 @@ on:
 env:
   REGISTRY: docker.io
   IMAGE_NAME: labordigital/docker-base-images-v2
-  SOURCE_TAG: 8.3-apache
   BASE_TAG: php83
-  EXT: -dev
 
 jobs:
   buildAndPush:

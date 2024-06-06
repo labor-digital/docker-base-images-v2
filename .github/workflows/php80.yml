@@ -2,20 +2,18 @@ name: Build and Push - PHP 80
 
 on:
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 8 * * *'
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - php80/**
+  schedule:
+    - cron: '0 8 * * *'
+  push:
+    branches:
+      - master
+    paths:
+      - php80/**
 
 env:
   REGISTRY: docker.io
   IMAGE_NAME: labordigital/docker-base-images-v2
-  SOURCE_TAG: 8.0-apache
   BASE_TAG: php80
-  EXT: -dev
 
 jobs:
   buildAndPush:
