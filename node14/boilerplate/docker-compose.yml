@@ -4,6 +4,7 @@ services:
     restart: "no"
     image: '${DOCKER_BASE_IMAGE}:${DOCKER_BASE_TAG}-dev'
     container_name: '${COMPOSE_PROJECT_NAME}'
+    # entrypoint: ["/opt/bootstrap.sh"] ## Add to avoid Doppler
     depends_on:
       - data
       - mysql

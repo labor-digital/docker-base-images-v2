@@ -22,6 +22,9 @@ RUN source /root/.bashrc \
 COPY opt /opt/project
 RUN find /opt/project -type f -iname "*.sh" -exec chmod +x {} \;
 
+# Add to avoid Doppler
+# CMD ["/opt/bootstrap.sh"]
+
 # Run our build script
 RUN /opt/build.sh
 
