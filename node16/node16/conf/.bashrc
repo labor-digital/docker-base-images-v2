@@ -1,6 +1,6 @@
 # Set default environment variables
 export PROJECT_ENV=${PROJECT_ENV:-"prod"}
-export DEFAULT_OWNER=${DEFAULT_OWNER:-"node.node"}
+export DEFAULT_OWNER=${DEFAULT_OWNER:-"node:node"}
 export DEFAULT_PERMISSIONS=${DEFAULT_PERMISSIONS:-"u=rwX,g=rwX,o-rwx"}
 export HONOR_PERMISSION_MARKERS=1
 

@@ -2,7 +2,7 @@
 export APACHE_WEBROOT=${APACHE_WEBROOT:-"/var/www/html"}
 export APACHE_LOG_DIR=${APACHE_LOG_DIR:-"/var/www/logs"}
 export PROJECT_ENV=${PROJECT_ENV:-"prod"}
-export DEFAULT_OWNER=${DEFAULT_OWNER:-"www-data.www-data"}
+export DEFAULT_OWNER=${DEFAULT_OWNER:-"www-data:www-data"}
 export DEFAULT_PERMISSIONS=${DEFAULT_PERMISSIONS:-"u=rwX,g=rwX,o-rwx"}
 export HONOR_PERMISSION_MARKERS=1
 
