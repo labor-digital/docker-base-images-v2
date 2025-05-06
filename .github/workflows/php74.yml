@@ -1,7 +1,6 @@
 name: Build and Push - PHP 74
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: '0 8 * * *'
   push:
