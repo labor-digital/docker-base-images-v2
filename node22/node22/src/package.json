@@ -1,0 +1,12 @@
+{
+	"name": "@labor-digital/node-base-image-v2",
+	"version": "1.0.0",
+	"description": "Generic entry point to keep the container running",
+	"main": "server.js",
+	"scripts": {
+		"start": "node /opt/index.js start",
+		"start:development": "node /opt/index.js start:development"
+	},
+	"author": "LABOR.digital",
+	"license": "Apache-2.0"
+}
