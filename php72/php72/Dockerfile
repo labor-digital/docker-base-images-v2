@@ -19,6 +19,11 @@ EXPOSE 443
 # @see http://stackoverflow.com/questions/27826241/running-nano-in-docker-container
 ENV TERM=xterm
 
+# Add archive debian repositories as this debian version is already EOL
+RUN rm /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian/ buster main" >> /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security/ buster/updates main" >> /etc/apt/sources.list
+
 # Install sudo
 RUN apt-get update && apt-get install -y sudo
 RUN apt-get update && apt-get install -y vim nano
