@@ -1,15 +1,15 @@
-# TAG: labordigital/docker-base-images-v2:php83
-# Build: docker build -t labordigital/docker-base-images-v2:php83 .
-# Push: docker push labordigital/docker-base-images-v2:php83
+# TAG: labordigital/docker-base-images-v2:php85
+# Build: docker build -t labordigital/docker-base-images-v2:php85 .
+# Push: docker push labordigital/docker-base-images-v2:php85
 
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM php:8.4-apache
+FROM php:8.5-apache
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
 
 # Set Label
-LABEL description="LABOR Digital PHP8.4"
+LABEL description="LABOR Digital PHP8.5"
 
 # Expose ports
 EXPOSE 80

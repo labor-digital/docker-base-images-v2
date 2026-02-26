@@ -27,7 +27,7 @@ services:
       retries: 2
   mysql:
     restart: 'no'
-    image: mariadb:12.0
+    image: mariadb:12.2
     env_file:
       - .env
     environment:

@@ -38,7 +38,7 @@ services:
   mysql:
     restart: "no"
     container_name: '${COMPOSE_PROJECT_NAME}-mysql'
-    image: mariadb:12.0
+    image: mariadb:12.2
     env_file:
       - .env
     ports:

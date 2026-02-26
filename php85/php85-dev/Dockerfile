@@ -1,13 +1,13 @@
-# TAG: labordigital/docker-base-images-v2:php83-dev
-# Build: docker build -t labordigital/docker-base-images-v2:php83-dev .
-# Push: docker push labordigital/docker-base-images-v2:php83-dev
-FROM labordigital/docker-base-images-v2:php84
+# TAG: labordigital/docker-base-images-v2:php85-dev
+# Build: docker build -t labordigital/docker-base-images-v2:php85-dev .
+# Push: docker push labordigital/docker-base-images-v2:php85-dev
+FROM labordigital/docker-base-images-v2:php85
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
 
 # Set Label
-LABEL description="Labor Digital PHP8.4 Dev Edition"
+LABEL description="Labor Digital PHP8.5 Dev Edition"
 
 COPY ssl/labor.systems/labor.systems.merged.crt /var/cert/merged.crt
 

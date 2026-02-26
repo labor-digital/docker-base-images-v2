@@ -1,5 +1,5 @@
 {
-    "name": "PHP 8.4 - no mysql",
+    "name": "PHP 8.5 - no mysql",
     "replaceProjectNameIn": [
         ".env.template",
         "README.md",
