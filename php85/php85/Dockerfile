@@ -101,9 +101,6 @@ RUN pecl install \
 # Install mbstring
 RUN apt-get install -y libonig-dev \
     && docker-php-ext-install mbstring
-
-# Install opcache
-RUN docker-php-ext-install opcache
 	
 # Install fileinfo
 RUN docker-php-ext-install -j$(nproc) fileinfo
