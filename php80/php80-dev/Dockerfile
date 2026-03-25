@@ -3,7 +3,12 @@ FROM labordigital/docker-base-images-v2:php80
 MAINTAINER LABOR digital <info@labor.digital>
 LABEL description="Labor Digital PHP8.0 Dev Edition"
 
+# Copy our wildcard *.labor.systems cert for use in apache
 COPY ssl/labor.systems/labor.systems.merged.crt /var/cert/merged.crt
+
+# Copy our RootCA into the trusted store
+COPY ssl/rootca/LaborRootCA.crt /usr/local/share/ca-certificates/LaborRootCA.crt
+RUN update-ca-certificates
 
 # Install some packages we need in dev
 RUN apt-get update && apt-get install -y \
