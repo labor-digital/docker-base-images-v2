@@ -1,4 +1,4 @@
-FROM node:22-bullseye-slim
+FROM node:22-bookworm-slim
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
