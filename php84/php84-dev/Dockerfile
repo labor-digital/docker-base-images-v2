@@ -1,6 +1,7 @@
-# TAG: labordigital/docker-base-images-v2:php83-dev
-# Build: docker build -t labordigital/docker-base-images-v2:php83-dev .
-# Push: docker push labordigital/docker-base-images-v2:php83-dev
+# TAG: labordigital/docker-base-images-v2:php84-dev
+# Build: docker build -t labordigital/docker-base-images-v2:php84-dev .
+# Push: docker push labordigital/docker-base-images-v2:php84-dev
+
 FROM labordigital/docker-base-images-v2:php84
 
 # Define author
