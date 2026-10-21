@@ -39,7 +39,7 @@ jobs:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/.
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -56,7 +56,7 @@ jobs:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/.
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -68,7 +68,7 @@ jobs:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/.
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -80,7 +80,7 @@ jobs:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/.
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-ext-dev
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-ext-dev/Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
