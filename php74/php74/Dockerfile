@@ -19,6 +19,53 @@ EXPOSE 443
 # @see http://stackoverflow.com/questions/27826241/running-nano-in-docker-container
 ENV TERM=xterm
 
+# Debian 11 (bullseye) LTS is EOL, its packages were moved from deb.debian.org to archive.debian.org
+RUN printf '%s\n' \
+    'deb http://archive.debian.org/debian bullseye main' \
+    'deb http://archive.debian.org/debian bullseye-updates main' \
+    'deb http://archive.debian.org/debian-security bullseye-security main' \
+    > /etc/apt/sources.list
+
+# Rebuild PHP from the php-src security backport branch (7.4.33 + fixes for CVE-2026-109618 / CVE-2026-109619)
+# The official image is EOL and will not receive these fixes, so we compile the backport ourselves,
+# using the exact configure options of the official build. /usr/src/php.tar.xz is replaced as well,
+# so all docker-php-ext-install calls below (and in child images) build against the patched sources.
+# @see https://github.com/php/php-src/tree/PHP-7.4-CVE-2026-109618-109619
+ARG PHP_SRC_REF=712e60f9edfd03f0960fc4fc3c2c375f42b90aa2
+RUN set -eux; \
+  savedAptMark="$(apt-mark showmanual)"; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    autoconf bison re2c dpkg-dev file g++ gcc libc-dev make pkg-config xz-utils curl ca-certificates \
+    apache2-dev libargon2-dev libcurl4-openssl-dev libonig-dev libreadline-dev libsodium-dev \
+    libsqlite3-dev libssl-dev libxml2-dev zlib1g-dev; \
+  configureOptions="$(php-config --configure-options)"; \
+  docker-php-source delete; \
+  rm -f /usr/src/php.tar.xz /usr/src/php.tar.xz.asc; \
+  mkdir -p /usr/src/php; \
+  curl -fsSL "https://github.com/php/php-src/archive/${PHP_SRC_REF}.tar.gz" \
+    | tar -xz -C /usr/src/php --strip-components=1; \
+  cd /usr/src/php; \
+  ./buildconf --force; \
+  export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS"; \
+  ./configure $configureOptions; \
+  make -j "$(nproc)"; \
+  find -type f -name '*.a' -delete; \
+  make install; \
+  make clean; \
+  cd /usr/src; \
+  tar -cJf /usr/src/php.tar.xz php; \
+  docker-php-source delete; \
+  apt-mark auto '.*' > /dev/null; \
+  [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; \
+  find /usr/local /usr/lib/apache2/modules -type f -executable -exec ldd '{}' ';' \
+    | awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
+    | sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual; \
+  apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+  rm -rf /var/lib/apt/lists/*; \
+  php -r 'exit(PHP_VERSION_ID >= 70434 ? 0 : 1);'; \
+  php -v
+
 # Install sudo
 RUN apt-get update && apt-get install -y sudo
 RUN apt-get update && apt-get install -y vim nano
