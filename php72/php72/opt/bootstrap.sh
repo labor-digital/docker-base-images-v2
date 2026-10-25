@@ -27,4 +27,4 @@ fi
 set_permissions
 
 # Run the main process
-apache2-foreground
+exec apache2-foreground
