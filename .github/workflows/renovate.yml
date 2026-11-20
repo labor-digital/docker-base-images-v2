@@ -66,7 +66,10 @@ jobs:
         uses: renovatebot/github-action@v46.3.14
         with:
           token: ${{ steps.app-token.outputs.token }}
-          args: ${{ inputs.dryRun && '--dry-run=full' || '' }}
+          # Die Action startet Renovate als Container. Die Major-Linie hier
+          # festhalten, damit ein Update der Action Renovate nicht unbemerkt
+          # auf eine neue Major-Version hebt.
+          renovate-version: '44'
         env:
           RENOVATE_PLATFORM: github
           RENOVATE_REPOSITORIES: ${{ github.repository }}
@@ -76,4 +79,8 @@ jobs:
           # Commits ueber die GitHub-API statt per git push: signierte Commits
           # der App und keine Push-Rechte auf master noetig.
           RENOVATE_PLATFORM_COMMIT: 'enabled'
+          # Die Action kennt keinen args-Input mehr (seit v19). Der Trockenlauf
+          # laeuft deshalb ueber die Env-Variable; ein leerer Wert wird von
+          # Renovate ignoriert und bedeutet "scharfer Lauf".
+          RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
