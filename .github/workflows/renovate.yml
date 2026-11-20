@@ -61,7 +61,9 @@ jobs:
           echo "git-author=${SLUG} <${USER_ID}+${SLUG}[bot]@users.noreply.github.com>" >> "$GITHUB_OUTPUT"
 
       - name: Run Renovate
-        uses: renovatebot/github-action@v46
+        # Achtung: Dieses Repository veroeffentlicht keine beweglichen
+        # Major-Tags (kein v46). Es muss immer die volle Version stehen.
+        uses: renovatebot/github-action@v46.3.14
         with:
           token: ${{ steps.app-token.outputs.token }}
           args: ${{ inputs.dryRun && '--dry-run=full' || '' }}
