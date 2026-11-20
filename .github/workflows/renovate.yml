@@ -5,7 +5,7 @@ name: Renovate
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       dryRun:
@@ -83,4 +83,13 @@ jobs:
           # laeuft deshalb ueber die Env-Variable; ein leerer Wert wird von
           # Renovate ignoriert und bedeutet "scharfer Lauf".
           RENOVATE_DRY_RUN: ${{ inputs.dryRun && 'full' || '' }}
+          # Authentifiziert Renovates Tag- und Registry-Lookups. Der Push der
+          # Images wird separat in den PHP-Workflows per docker/login-action angemeldet.
+          RENOVATE_HOST_RULES: >-
+            [{"hostType":"docker","matchHost":"hub.docker.com",
+              "username":"${{ secrets.DOCKERHUB_USERNAME }}",
+              "password":"${{ secrets.DOCKERHUB_TOKEN }}"},
+             {"hostType":"docker","matchHost":"index.docker.io",
+              "username":"${{ secrets.DOCKERHUB_USERNAME }}",
+              "password":"${{ secrets.DOCKERHUB_TOKEN }}"}]
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
