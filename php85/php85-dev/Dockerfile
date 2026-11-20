@@ -1,7 +1,7 @@
 # TAG: labordigital/docker-base-images-v2:php85-dev
 # Build: docker build -t labordigital/docker-base-images-v2:php85-dev .
 # Push: docker push labordigital/docker-base-images-v2:php85-dev
-FROM labordigital/docker-base-images-v2:php85
+FROM labordigital/docker-base-images-v2:php-8.5.12
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
