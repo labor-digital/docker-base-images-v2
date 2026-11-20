@@ -18,26 +18,14 @@ env:
   BASE_TAG: php85
 
 jobs:
-  buildAndPush:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.phpver.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Login to DockerHub Registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # Die Patch-Version steht in der FROM-Zeile des Basis-Dockerfiles und muss
-      # mit der FROM-Zeile des Dev-Dockerfiles uebereinstimmen, sonst wuerde ein
-      # Dev-Image mit einer falschen Patch-Version getaggt werden.
+      # Basis- und Dev-Dockerfile muessen dieselbe Patch-Version verwenden.
       - name: Determine PHP patch version
         id: phpver
         run: |
@@ -56,36 +44,183 @@ jobs:
           echo "PHP-Patch-Version: $VERSION"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
-      # Base Image
-      - name: Build and push base image
-        uses: docker/build-push-action@v5
+  base:
+    needs: prepare
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            arch: arm64
+            # Rueckfall auf Emulation: ubuntu-latest plus setup-qemu-action.
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push base image by digest
+        id: build
+        uses: docker/build-push-action@v6
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/.
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}
-            ${{ env.IMAGE_NAME }}:php-${{ steps.phpver.outputs.version }}
-          platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          platforms: ${{ matrix.platform }}
+          provenance: false
+          outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ env.BASE_TAG }}-base-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ env.BASE_TAG }}-base-${{ matrix.arch }}
 
-      # Dev Image
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          DIGEST="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${DIGEST#sha256:}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-base-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  base-merge:
+    needs: [prepare, base]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-base-*
+          merge-multiple: true
+
+      - name: Create base manifest list and push tags
+        working-directory: /tmp/digests
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          docker buildx imagetools create \
+            -t "${IMAGE_NAME}:${BASE_TAG}" \
+            -t "${IMAGE_NAME}:php-${VERSION}" \
+            $(printf "${IMAGE_NAME}@sha256:%s " *)
+
+      - name: Verify base manifest list
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          docker buildx imagetools inspect "${IMAGE_NAME}:${BASE_TAG}"
+          docker buildx imagetools inspect "${IMAGE_NAME}:php-${VERSION}"
+
+  dev:
+    needs: [prepare, base-merge]
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            arch: arm64
+            # Rueckfall auf Emulation: ubuntu-latest plus setup-qemu-action.
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+
       - name: Checkout ssl certs
         uses: actions/checkout@v4
         with:
           repository: labor-digital/ssl-certs
           path: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/ssl
-      - name: Build and push dev image
-        uses: docker/build-push-action@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push dev image by digest
+        id: build
+        uses: docker/build-push-action@v6
         with:
           context: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/.
-          push: true
-          pull: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ env.BASE_TAG }}-dev
-            ${{ env.IMAGE_NAME }}:php-${{ steps.phpver.outputs.version }}-dev
-          platforms: linux/amd64,linux/arm64
           file: ./${{ env.BASE_TAG }}/${{ env.BASE_TAG }}-dev/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          platforms: ${{ matrix.platform }}
+          pull: true
+          provenance: false
+          outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ env.BASE_TAG }}-dev-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ env.BASE_TAG }}-dev-${{ matrix.arch }}
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          DIGEST="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${DIGEST#sha256:}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: digests-dev-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  dev-merge:
+    needs: [prepare, dev]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-dev-*
+          merge-multiple: true
+
+      - name: Create dev manifest list and push tags
+        working-directory: /tmp/digests
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          docker buildx imagetools create \
+            -t "${IMAGE_NAME}:${BASE_TAG}-dev" \
+            -t "${IMAGE_NAME}:php-${VERSION}-dev" \
+            $(printf "${IMAGE_NAME}@sha256:%s " *)
+
+      - name: Verify dev manifest list
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          docker buildx imagetools inspect "${IMAGE_NAME}:${BASE_TAG}-dev"
+          docker buildx imagetools inspect "${IMAGE_NAME}:php-${VERSION}-dev"
