@@ -1,0 +1,71 @@
+# Prueft Pull Requests, die ein PHP-Basis-Image aendern, ohne etwas zu pushen.
+# Bewusst ein einziger Workflow ohne paths-Filter: Nur so kann "pr-check" als
+# Required Check hinterlegt werden, ohne dass PRs ohne Dockerfile-Aenderung
+# dauerhaft auf "Expected" haengen bleiben.
+name: PR Check
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: pr-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed base images
+        id: detect
+        run: |
+          DIRS=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            | sed -nE 's#^(php8[0-9])/php8[0-9](-dev)?/.*#\1#p' \
+            | sort -u | tr '\n' ' ')
+          echo "dirs=${DIRS}" >> "$GITHUB_OUTPUT"
+          echo "Geaenderte PHP-Linien: ${DIRS:-keine}"
+
+      # Die Patch-Version aus dem Basis-Dockerfile muss zur FROM-Zeile des
+      # Dev-Dockerfiles passen, sonst entstuende nach dem Merge ein
+      # php-X.Y.Z-dev mit einem anderen Inhalt als php-X.Y.Z.
+      - name: Check base and dev patch version
+        if: steps.detect.outputs.dirs != ''
+        run: |
+          for d in ${{ steps.detect.outputs.dirs }}; do
+            VERSION=$(tr -d '\r' < "./$d/$d/Dockerfile" | sed -nE 's/^FROM php:([0-9]+\.[0-9]+\.[0-9]+)-apache.*/\1/p')
+            DEV_VERSION=$(tr -d '\r' < "./$d/$d-dev/Dockerfile" | sed -nE 's#^FROM .*:php-([0-9]+\.[0-9]+\.[0-9]+)$#\1#p')
+            if [ -z "$VERSION" ]; then
+              echo "::notice::$d ist noch nicht auf eine Patch-Version gepinnt, Pruefung uebersprungen"
+              continue
+            fi
+            if [ "$VERSION" != "$DEV_VERSION" ]; then
+              echo "::error::$d: Basis-Dockerfile sagt $VERSION, Dev-Dockerfile sagt ${DEV_VERSION:-nichts}"
+              exit 1
+            fi
+            echo "$d: $VERSION"
+          done
+
+      - name: Login to DockerHub Registry
+        if: steps.detect.outputs.dirs != '' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: steps.detect.outputs.dirs != ''
+        uses: docker/setup-buildx-action@v3
+
+      # Nur linux/amd64: Der ARM-Build per QEMU wuerde den PR-Check vervielfachen.
+      # Multi-Arch entsteht erst im Push-Workflow nach dem Merge.
+      - name: Build base images (no push)
+        if: steps.detect.outputs.dirs != ''
+        run: |
+          for d in ${{ steps.detect.outputs.dirs }}; do
+            echo "::group::$d"
+            docker buildx build \
+              --platform linux/amd64 \
+              --file "./$d/$d/Dockerfile" \
+              "./$d/$d/."
+            echo "::endgroup::"
+          done

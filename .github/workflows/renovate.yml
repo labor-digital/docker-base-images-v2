@@ -1,0 +1,77 @@
+# Self-hosted Renovate. Baut keine Images, sondern legt nur PRs an, die
+# anschliessend den PR-Check durchlaufen und den Push-Workflow ausloesen.
+# Konfiguration: renovate.json im Repo-Root.
+name: Renovate
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      dryRun:
+        description: 'Nur simulieren, nichts schreiben'
+        type: boolean
+        default: false
+      logLevel:
+        description: 'Log-Level'
+        type: choice
+        options:
+          - info
+          - debug
+        default: info
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      # Der Standard-GITHUB_TOKEN scheidet aus: Mit ihm erstellte PRs loesen
+      # keine weiteren Workflows aus, der pr-check wuerde also nie laufen.
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          # Die Client-ID ist kein Geheimnis. Sie darf trotzdem als Secret
+          # hinterlegt sein (z. B. auf Org-Ebene), deshalb beide Quellen.
+          client-id: ${{ vars.RENOVATE_APP_CLIENT_ID || secrets.RENOVATE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+
+      # Ein App-Installations-Token kann /user nicht abfragen. Ohne explizite
+      # Angabe findet Renovate deshalb keinen Commit-Autor.
+      - name: Resolve bot identity
+        id: bot
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          USER_ID=$(gh api "/users/${SLUG}%5Bbot%5D" --jq .id 2>/dev/null || true)
+          if [ -z "$USER_ID" ]; then
+            USER_ID=$(curl -fsSL "https://api.github.com/users/${SLUG}%5Bbot%5D" | jq -r .id || true)
+          fi
+          if [ -z "$USER_ID" ] || [ "$USER_ID" = "null" ]; then
+            echo "::error::Konnte die User-ID von ${SLUG}[bot] nicht ermitteln"
+            exit 1
+          fi
+          echo "username=${SLUG}[bot]" >> "$GITHUB_OUTPUT"
+          echo "git-author=${SLUG} <${USER_ID}+${SLUG}[bot]@users.noreply.github.com>" >> "$GITHUB_OUTPUT"
+
+      - name: Run Renovate
+        uses: renovatebot/github-action@v46
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          args: ${{ inputs.dryRun && '--dry-run=full' || '' }}
+        env:
+          RENOVATE_PLATFORM: github
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
+          RENOVATE_ONBOARDING: 'false'
+          RENOVATE_USERNAME: ${{ steps.bot.outputs.username }}
+          RENOVATE_GIT_AUTHOR: ${{ steps.bot.outputs.git-author }}
+          # Commits ueber die GitHub-API statt per git push: signierte Commits
+          # der App und keine Push-Rechte auf master noetig.
+          RENOVATE_PLATFORM_COMMIT: 'enabled'
+          LOG_LEVEL: ${{ inputs.logLevel || 'info' }}

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Haelt die PHP-Basis-Images dieses Repos aktuell.",
+    "includePaths enthaelt vorerst nur php85. Jede weitere Linie wird erst aufgenommen,",
+    "wenn ihr Basis-Dockerfile auf Patch+Digest gepinnt und ihr Workflow umgestellt ist.",
+    "Siehe docs/renovate/01-basis-repo-github.md."
+  ],
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "timezone": "Europe/Berlin",
+  "enabledManagers": ["dockerfile", "custom.regex"],
+  "includePaths": [
+    "php85/php85/Dockerfile",
+    "php85/php85-dev/Dockerfile"
+  ],
+  "separateMinorPatch": true,
+  "prConcurrentLimit": 4,
+  "prHourlyLimit": 4,
+  "customManagers": [
+    {
+      "description": "Patch-Version im FROM des Dev-Dockerfiles, abgeleitet vom Upstream-Image php.",
+      "customType": "regex",
+      "managerFilePatterns": ["php8[0-9]/php8[0-9]-dev/Dockerfile"],
+      "matchStrings": [
+        "FROM labordigital/docker-base-images-v2:php-(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "php",
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Nur die Basis-Dockerfiles bekommen einen Digest-Pin.",
+      "matchFileNames": [
+        "php82/php82/Dockerfile",
+        "php83/php83/Dockerfile",
+        "php84/php84/Dockerfile",
+        "php85/php85/Dockerfile"
+      ],
+      "matchDatasources": ["docker"],
+      "pinDigests": true
+    },
+    {
+      "description": "Die PHP-Linie eines Ordners ist fest. Major/Minor niemals automatisch anheben.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["php"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "Das eigene Image im FROM des Dev-Dockerfiles ist keine externe Abhaengigkeit.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["labordigital/docker-base-images-v2"],
+      "enabled": false
+    },
+    {
+      "description": "Patch- und Digest-Updates automatisch mergen, sobald pr-check gruen ist. platformAutomerge setzt voraus, dass fuer master ein Required Status Check pr-check hinterlegt und Allow auto-merge aktiv ist (siehe Abschnitt 11 und 12 der Doku).",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["php"],
+      "matchUpdateTypes": ["patch", "digest"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    }
+  ]
+}
