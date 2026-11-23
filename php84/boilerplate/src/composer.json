@@ -1,5 +1,5 @@
 {
-	"name": "labor-digital/dsa",
+	"name": "labor-digital/{{PROJECT_NAME}}",
 	"description": "LABOR App Boilerplate",
 	"homepage": "https://www.labor.digital",
 	"type": "project",
@@ -12,7 +12,15 @@
 		}
 	],
 	"require": {
+		"php": "~8.4.0"
 	},
 	"require-dev": {
+	},
+	"config": {
+		"platform": {
+			"php": "8.4"
+		},
+		"platform-check": true,
+		"sort-packages": true
 	}
 }

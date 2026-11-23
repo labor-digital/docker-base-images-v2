@@ -12,7 +12,15 @@
 		}
 	],
 	"require": {
+		"php": "~8.4.0"
 	},
 	"require-dev": {
+	},
+	"config": {
+		"platform": {
+			"php": "8.4"
+		},
+		"platform-check": true,
+		"sort-packages": true
 	}
 }
