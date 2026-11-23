@@ -2,8 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
     "Haelt die PHP-Basis-Images dieses Repos aktuell.",
-    "includePaths enthaelt vorerst nur php85. Jede weitere Linie wird erst aufgenommen,",
-    "wenn ihr Basis-Dockerfile auf Patch+Digest gepinnt und ihr Workflow umgestellt ist.",
+    "includePaths enthaelt die vier aktiven Linien php82 bis php85. Alle sind auf",
+    "Patch+Digest gepinnt und bauen ueber den getrennten Plattform-Workflow.",
+    "php74 ist eingefroren und absichtlich nicht enthalten.",
     "Siehe docs/renovate/01-basis-repo-github.md."
   ],
   "extends": [
@@ -13,6 +14,12 @@
   "timezone": "Europe/Berlin",
   "enabledManagers": ["dockerfile", "custom.regex"],
   "includePaths": [
+    "php82/php82/Dockerfile",
+    "php82/php82-dev/Dockerfile",
+    "php83/php83/Dockerfile",
+    "php83/php83-dev/Dockerfile",
+    "php84/php84/Dockerfile",
+    "php84/php84-dev/Dockerfile",
     "php85/php85/Dockerfile",
     "php85/php85-dev/Dockerfile"
   ],

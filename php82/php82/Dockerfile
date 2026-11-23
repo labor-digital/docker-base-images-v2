@@ -1,5 +1,9 @@
+# TAG: labordigital/docker-base-images-v2:php82
+# Build: docker build -t labordigital/docker-base-images-v2:php82 .
+# Push: docker push labordigital/docker-base-images-v2:php82
+
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM php:8.2-apache
+FROM php:8.2.35-apache@sha256:1bc4115a5528326425f1f59846fc7879d7d3843da9905b42931755ac4d4b29bc
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>

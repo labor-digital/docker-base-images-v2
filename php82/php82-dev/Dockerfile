@@ -2,9 +2,12 @@
 # Build: docker build -t labordigital/docker-base-images-v2:php82-dev .
 # Push: docker push labordigital/docker-base-images-v2:php82-dev
 
-FROM labordigital/docker-base-images-v2:php82
+FROM labordigital/docker-base-images-v2:php-8.2.35
 
+# Define author
 MAINTAINER LABOR digital <info@labor.digital>
+
+# Set Label
 LABEL description="Labor Digital PHP8.2 Dev Edition"
 
 # Copy our wildcard *.labor.systems cert for use in apache
@@ -32,7 +35,10 @@ RUN echo "Mutex posixsem" >> /etc/apache2/apache2.conf
 COPY conf/bashrc-dev.sh /root/
 RUN chmod +x /root/bashrc-dev.sh
 
+# Add development configuration
 COPY /conf/99-environment.ini /usr/local/etc/php/conf.d/
+
+# Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin
 RUN source /root/.bashrc \
 	&& ensure_dir /var/www/.composer

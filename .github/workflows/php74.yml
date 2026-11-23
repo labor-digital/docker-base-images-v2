@@ -1,13 +1,15 @@
+# PHP 7.4 ist eingefroren: kein Cron mehr, keine Renovate-Ueberwachung und
+# kein Umbau auf getrennte Plattform-Jobs. Gebaut wird nur noch bei einer
+# Aenderung unter php74/ oder von Hand per workflow_dispatch.
 name: Build and Push - PHP 74
 
 on:
-  schedule:
-    - cron: '0 8 * * *'
   push:
     branches:
       - master
     paths:
       - php74/**
+  workflow_dispatch:
 
 env:
   REGISTRY: docker.io
