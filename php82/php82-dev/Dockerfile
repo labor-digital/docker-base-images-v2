@@ -2,7 +2,7 @@
 # Build: docker build -t labordigital/docker-base-images-v2:php82-dev .
 # Push: docker push labordigital/docker-base-images-v2:php82-dev
 
-FROM labordigital/docker-base-images-v2:php-8.2.35
+FROM labordigital/docker-base-images-v2:php-8.2.36
 
 # Define author
 MAINTAINER LABOR digital <info@labor.digital>
