@@ -3,7 +3,7 @@
 # Push: docker push labordigital/docker-base-images-v2:php83
 
 # Parent package is described here: https://hub.docker.com/_/php/
-FROM php:8.4.28-apache@sha256:3550aedd1c7bdfe26283c7b1550ef76509e6c2b1284aef814e6f2e325b7c9688
+FROM php:8.4.28-apache@sha256:74bda556239f67022b9bdcc8f1c27c76bb61adcf19a98110f806e949a17acfc6
 
 # Define author
 MAINTAINER LABOR.digital <info@labor.digital>
